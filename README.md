@@ -2,6 +2,8 @@
 
 **TODO: Add description**
 
+[![Build Status](https://travis-ci.org/BenBals/elixir-demo-kv.svg?branch=master)](https://travis-ci.org/BenBals/elixir-demo-kv)
+
 ## Installation
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
