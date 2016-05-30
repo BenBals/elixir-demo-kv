@@ -16,4 +16,14 @@ defmodule KV.RegistyTest do
   end
 
 
+  test "removes bucket on exit", %{registry: registry} do
+    # make a shopping bucket
+    KV.Registry.create(registry, "shopping")
+    # get its pid
+    {:ok, bucket} = KV.Registry.lookup(registry, "shopping")
+    # stop it via Agent.stop (aka crash it)
+    Agent.stop(bucket)
+    # make sure the bucket no longer is in the registry
+    assert KV.Registry.lookup(registry, "shopping") === :error
+  end
 end
