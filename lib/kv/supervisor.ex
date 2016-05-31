@@ -17,6 +17,6 @@ defmodule KV.Supervisor do
     ]
 
     # supervise there children using the given strategy
-    supervise(children, strategy: :one_for_one)
+    supervise(children, strategy: :rest_for_one)
   end
 end
