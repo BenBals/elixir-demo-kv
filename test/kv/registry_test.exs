@@ -1,8 +1,8 @@
 defmodule KV.RegistyTest do
   use ExUnit.Case, async: true
 
-  setup do
-    {:ok, registry} = KV.Registry.start_link
+  setup context do
+    {:ok, registry} = KV.Registry.start_link(context.test)
     {:ok, registry: registry}
   end
 
@@ -25,5 +25,19 @@ defmodule KV.RegistyTest do
     Agent.stop(bucket)
     # make sure the bucket no longer is in the registry
     assert KV.Registry.lookup(registry, "shopping") === :error
+  end
+
+  test "removes bucket on crash", %{registry: registry} do
+    KV.Registry.create registry, "shopping"
+    {:ok, bucket} = KV.Registry.lookup registry, "shopping"
+
+    # Stop the bucket with non-normal reason
+    Process.exit bucket, :shutdown
+
+    # Wait til the bucket is dead
+    ref = Process.monitor bucket
+    assert_receive {:DOWN, ^ref, _, _, _}
+
+    assert KV.Registry.lookup registry, "shopping" === :error
   end
 end
